@@ -28,19 +28,54 @@ class RandomPlayer(Player):
         return random.choice(['rock', 'paper', 'scissors'])
 
 
+class ReflectPlayer(Player):
+    def __init__(self):
+        self.last_move = None
+
+    def move(self):
+        if self.last_move is None:
+            return random.choice(['rock', 'paper', 'scissors'])
+        return self.last_move
+
+    def learn(self, my_move, their_move):
+        self.last_move = their_move
+
+
+class CyclePlayer(Player):
+    def __init__(self):
+        self.cycle_moves = ['rock', 'paper', 'scissors']
+        self.index = 0
+
+    def move(self):
+        move = self.cycle_moves[self.index]
+        self.index = (self.index + 1) % len(self.cycle_moves)
+        return move
+
+
+class AllRockerPlayer(Player):
+    def move(self):
+        return 'rock'
+
+
+class HumanPlayer(Player):
+    pass
+
+
 def beats(one, two):
     return ((one == 'rock' and two == 'scissors') or
             (one == 'scissors' and two == 'paper') or
             (one == 'paper' and two == 'rock'))
+
+
 class Game:
-    def init(self, p1, p2):
+    def __init__(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
-        self.p1score = 0
-        self.p2score = 0
+        self.p1_score = 0
+        self.p2_score = 0
 
-    def playround(self):
-        move1 = self.p1.choosemove()
+    def play_round(self):
+        move1 = self.p1.choose_move()
         move2 = self.p2.move()
         print_pause(f"You: {move1}  Player 2: {move2}")
         if beats(move1, move2):
