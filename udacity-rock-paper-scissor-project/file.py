@@ -20,7 +20,9 @@ class Player:
             if move in ['rock', 'paper', 'scissors']:
                 return move
             else:
-                print_pause("Invalid move.")
+                print_pause("Invalid move. "
+                            "Please choose "
+                            "'rock', 'paper', or 'scissors'.")
 
 
 class RandomPlayer(Player):
@@ -50,6 +52,9 @@ class CyclePlayer(Player):
         move = self.cycle_moves[self.index]
         self.index = (self.index + 1) % len(self.cycle_moves)
         return move
+
+    def learn(self, my_move, their_move):
+        self.last_move = their_move
 
 
 class AllRockerPlayer(Player):
@@ -86,6 +91,10 @@ class Game:
             print_pause("Player 2 wins!")
         else:
             print_pause("It's a tie!")
+        if hasattr(self.p1, 'learn'):
+            self.p1.learn(move1, move2)
+        if hasattr(self.p2, 'learn'):
+            self.p2.learn(move2, move1)
 
     def play_game(self):
         print_pause("Welcome to Rock, Paper, Scissors!")
@@ -109,14 +118,30 @@ class Game:
             if play_again == 'yes':
                 new_game = Game(Player(), RandomPlayer())
                 new_game.play_game()
-                break
+                return
             elif play_again == 'no':
                 print_pause("Thanks for playing!")
-                break
+                quit()
             else:
-                print_pause("Invalid input. Please enter 'yes' or 'no'.")
+                print_pause("Invalid input. "
+                            "Please enter 'yes' or 'no'.")
 
 
 if __name__ == '__main__':
     game = Game(Player(), RandomPlayer())
     game.play_game()
+
+random_player = RandomPlayer()
+print(random_player.move())
+
+reflect_player = ReflectPlayer()
+print(reflect_player.move())
+
+cycle_player = CyclePlayer()
+print(cycle_player.move())
+
+all_rocker_player = AllRockerPlayer()
+print(all_rocker_player.move())
+
+human_player = HumanPlayer()
+print(human_player.move())
