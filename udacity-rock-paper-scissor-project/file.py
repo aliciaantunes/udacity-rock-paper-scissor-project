@@ -43,12 +43,18 @@ class MimicPlayer(Player):
             return random.choice(['rock', 'paper', 'scissors'])
         return self.last_move
 
+    def learn(self, my_move, their_move):
+        self.last_move = their_move
+
 
 class CyclePlayer(Player):
     def __init__(self):
         super().__init__()
         self.moves = ['rock', 'paper', 'scissors']
         self.index = 0
+
+    def learn(self, my_move, their_move):
+        pass
 
     def move(self):
         choice = self.moves[self.index]
@@ -89,7 +95,7 @@ class Game:
             self.scores[self.p2] += 1
             print_pause("Player 2 wins!")
 
-        self.show_scores()
+        self.show_scores()  # Chama a função para mostrar o placar
         self.p1.learn(move1, move2)
         self.p2.learn(move2, move1)
 
