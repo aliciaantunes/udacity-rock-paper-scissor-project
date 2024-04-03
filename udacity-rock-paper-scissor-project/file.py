@@ -38,10 +38,17 @@ class RandomPlayer(Player):
 
 
 class MimicPlayer(Player):
+    def __init__(self):
+        super().__init__()
+        self.last_move = None
+
     def move(self):
         if self.last_move is None:
             return random.choice(['rock', 'paper', 'scissors'])
         return self.last_move
+    
+    def learn(self, my_move, their_move):
+        self.last_move = their_move
 
 
 class CyclePlayer(Player):
@@ -54,6 +61,9 @@ class CyclePlayer(Player):
         choice = self.moves[self.index]
         self.index = (self.index + 1) % len(self.moves)
         return choice
+    
+    def learn(self, my_move, their_move):
+        self.last_move = my_move
 
 
 BEATS = {'rock': 'scissors',
